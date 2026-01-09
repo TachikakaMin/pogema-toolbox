@@ -243,6 +243,7 @@ def balanced_dask_backend(algo_config, env_configs, full_algo_name):
     initialized_algo_config = ToolboxRegistry.create_algorithm_config(algo_config['name'], **algo_config)
 
     num_process = min(initialized_algo_config.num_process, get_num_of_available_cpus())
+    print(num_process)
     balanced_buckets = get_balanced_buckets_indexes(env_configs, num_process)
 
     cluster = dd.LocalCluster(n_workers=num_process, threads_per_worker=1, nthreads=1)
