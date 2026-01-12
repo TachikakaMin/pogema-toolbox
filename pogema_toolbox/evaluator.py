@@ -43,7 +43,7 @@ def sequential_backend(algo_config, env_configs, full_algo_name, registry_state=
     algo = registry.create_algorithm(algo_name, **algo_config)
     algo_cfg = registry.create_algorithm_config(algo_name, **algo_config)
     for idx, env_config in enumerate(env_configs):
-        ToolboxRegistry.info(f'Running: {full_algo_name} [{idx + 1}/{len(env_configs)}]')
+        ToolboxRegistry.info(f'Running: {full_algo_name} [{idx + 1}/{len(env_configs)}] map={env_config.get("map_name")} agents={env_config.get("num_agents")} seed={env_config.get("seed")} scenario={env_config.get("scenario")}')
         env = registry.create_env(env_config['name'], **env_config)
         if algo_cfg.preprocessing:
             ToolboxRegistry.debug('Adding preprocessing')
@@ -373,6 +373,7 @@ def evaluation(evaluation_config, eval_dir=None):
                     current_cfg_changes[('seed',)] = scenario_value['seed']
                 
                 current_cfg = deepcopy(env_cfg)
+                current_cfg['scenario'] = scenario_name
                 
                 scenario_copy = deepcopy(scenario_value)
                 if 'num_agents' in current_cfg:
