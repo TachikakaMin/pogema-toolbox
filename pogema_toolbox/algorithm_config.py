@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class AlgoBase(BaseModel):
     name: str = None
-    num_process: int = 2
+    num_process: int = 8
     device: str = 'cuda'
     parallel_backend: Literal['dask', 'sequential', 'balanced_dask', 'balanced_multiprocessing', 'multiprocessing'] = 'balanced_dask'
     run_episode_func: str = 'default'
