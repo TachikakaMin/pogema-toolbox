@@ -134,6 +134,7 @@ def dask_backend(algo_config, env_configs, full_algo_name):
     Returns:
         List: Results of running the algorithm on the environments.
     """
+    import logging
     import dask.distributed as dd
     initialized_algo_config = ToolboxRegistry.create_algorithm_config(algo_config['name'], **algo_config)
 
@@ -238,6 +239,7 @@ def balanced_dask_backend(algo_config, env_configs, full_algo_name):
         List: Results of running the algorithm on the environments.
     """
     ToolboxRegistry.debug('Running experiment with balanced task backend')
+    import logging
     import dask.distributed as dd
 
     initialized_algo_config = ToolboxRegistry.create_algorithm_config(algo_config['name'], **algo_config)
@@ -246,7 +248,21 @@ def balanced_dask_backend(algo_config, env_configs, full_algo_name):
     print(num_process)
     balanced_buckets = get_balanced_buckets_indexes(env_configs, num_process)
 
-    cluster = dd.LocalCluster(n_workers=num_process, threads_per_worker=1, nthreads=1)
+    try:
+        cluster = dd.LocalCluster(
+            n_workers=num_process,
+            threads_per_worker=1,
+            nthreads=1,
+            dashboard_address=":0",
+            silence_logs=logging.ERROR,
+        )
+    except TypeError:
+        cluster = dd.LocalCluster(
+            n_workers=num_process,
+            threads_per_worker=1,
+            nthreads=1,
+            dashboard_address=":0",
+        )
     client = dd.Client(cluster, timeout="120s")  # Connect the client to the cluster
 
     futures = []

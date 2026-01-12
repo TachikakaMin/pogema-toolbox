@@ -144,6 +144,10 @@ class ToolboxRegistry:
     def register_maps(cls, maps):
         for map_name, map_grid in maps.items():
             if map_name in cls.get_maps():
+                existing = cls._maps[map_name]
+                if existing == map_grid:
+                    cls.debug(f'Skipping duplicate map registration for {map_name}')
+                    continue
                 cls._logger.warning(f'Registering existing map with name {map_name}')
             cls._maps[map_name] = map_grid
             cls.debug(f'Registered map with name {map_name}')
